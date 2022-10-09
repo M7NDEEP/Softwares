@@ -1,0 +1,183 @@
+from tkinter import *
+from tkinter import ttk, filedialog
+from tkinter.font import BOLD, ITALIC
+from turtle import back, left, right
+from pygame import mixer
+from tkinter.filedialog import askopenfilename, asksaveasfilename
+from PIL import Image
+import tkinter.messagebox as msg
+import os
+
+mixer.init()
+Ext = (".mp3", ".mp4", ".wav", ".audio")
+
+# Glowing :-
+
+
+def on_enter(e):
+    Add_Button['background'] = 'orange'
+
+
+def on_leave(e):
+    Add_Button['background'] = 'SystemButtonFace'
+
+
+def on_Enter(e):
+    AddFol_Button['background'] = 'orange'
+
+
+def on_Leave(e):
+    AddFol_Button['background'] = 'SystemButtonFace'
+
+
+def On_enter(e):
+    About_Button['background'] = 'orange'
+
+
+def On_leave(e):
+    About_Button['background'] = 'SystemButtonFace'
+
+
+def play_e(e):
+    playbutton['background'] = 'orange'
+
+
+def play_l(e):
+    playbutton['background'] = 'SystemButtonFace'
+
+
+def stop_e(e):
+    stopbutton['background'] = 'orange'
+
+
+def stop_l(e):
+    stopbutton['background'] = 'SystemButtonFace'
+
+
+def res_e(e):
+    resbutton['background'] = 'orange'
+
+
+def res_l(e):
+    resbutton['background'] = 'SystemButtonFace'
+
+
+def pause_e(e):
+    pausebutton['background'] = 'orange'
+
+
+def pause_l(e):
+    pausebutton['background'] = 'SystemButtonFace'
+
+# About:-
+
+
+def About():
+    msg.showinfo("About", "CrazyBolt v1.0\nCreated by Mandeep yadav")
+
+# Add Song Folder function :-
+
+
+def Add_Folder():
+    path = filedialog.askdirectory(title="Select music folder")
+    if path:
+        os.chdir(path)
+        songs = os.listdir(path)
+        for song in songs:
+            if song.endswith(Ext):
+                MusicList.insert(END, song)
+
+# Add song function :-
+
+
+def Add():
+    song_path = filedialog.askopenfilenames(
+        initialdir="Music/", title="Add Music", filetypes=(("mp3 Files", "*.mp3"),))
+    for Songs in song_path:
+        MusicList.insert(END, Songs)
+
+
+def Play_Music():
+    Music_Name = MusicList.get(ACTIVE)
+    try:
+        mixer.music.load(MusicList.get(ACTIVE))
+        mixer.music.play()
+    except Exception as e:
+        msg.showerror(
+            'Error', "Crazy Bolt does't support\n mp4 or wav files !")
+
+
+root = Tk()
+root.title('Crazy Bolt')
+root.minsize(850, 450)
+root.maxsize(850, 450)
+root.iconbitmap("icon.ico")
+p1 = PhotoImage(file="wall.png")
+Label(root, image=p1).place(x=0, y=0)
+
+# Side Frame :-
+Add_Button = Button(root, text="Add Music", font=(
+    "comicsans", 11, BOLD), command=Add, relief=GROOVE, width=10)
+Add_Button.place(x=33, y=135)
+Add_Button.bind("<Enter>", on_enter)
+Add_Button.bind("<Leave>", on_leave)
+
+AddFol_Button = Button(root, text="Add Folder", font=(
+    "comicsans", 11, BOLD), command=Add_Folder, relief=GROOVE, width=10)
+AddFol_Button.place(x=33, y=195)
+AddFol_Button.bind("<Enter>", on_Enter)
+AddFol_Button.bind("<Leave>", on_Leave)
+
+About_Button = Button(root, text="About", font=(
+    "comicsans", 11, BOLD), command=About, relief=GROOVE, width=10)
+About_Button.place(x=33, y=255)
+About_Button.bind("<Enter>", On_enter)
+About_Button.bind("<Leave>", On_leave)
+
+
+# F1.pack(fill=Y,side=LEFT)
+'''
+# Heading :-
+L1 = Label(root,text="C r a z y  B o l t  mp3 ",fg="Red",font=("impact",50,ITALIC))
+L1.place(x=235)'''
+
+# Main Window :-
+Scroll = Scrollbar(root)
+MusicList = Listbox(root, width=69, height=14, font=("comicsans", 10, ITALIC), bg="white",
+                    relief=GROOVE, selectbackground="lightblue", cursor="hand2", bd=0, yscrollcommand=Scroll.set)
+Scroll.config(command=MusicList.yview)
+Scroll.pack(fill=Y, side=RIGHT)
+MusicList.place(x=255, y=90)
+
+# Main Buttons :-
+Play = PhotoImage(file="play.png")
+playbutton = Button(root, image=Play, command=Play_Music)
+playbutton.place(x=320, y=350)
+playbutton.bind("<Enter>", play_e)
+playbutton.bind("<Leave>", play_l)
+Label(root, text="PLAY", font=("comicsans", 9, BOLD)).place(x=330, y=407)
+
+Stop = PhotoImage(file="stop.png")
+stopbutton = Button(root, image=Stop, command=mixer.music.stop)
+stopbutton.place(x=620, y=350)
+stopbutton.bind("<Enter>", stop_e)
+stopbutton.bind("<Leave>", stop_l)
+Label(root, text="STOP", font=("comicsans", 9, BOLD)).place(x=631, y=407)
+
+
+Resume = PhotoImage(file="resume.png")
+resbutton = Button(root, image=Resume, command=mixer.music.unpause)
+resbutton.place(x=520, y=350)
+resbutton.bind("<Enter>", res_e)
+resbutton.bind("<Leave>", res_l)
+Label(root, text="RESUME", font=("comicsans", 9, BOLD)).place(x=522, y=407)
+
+Pause = PhotoImage(file="pause.png")
+pausebutton = Button(root, image=Pause, command=mixer.music.pause)
+pausebutton.place(x=420, y=350)
+pausebutton.bind("<Enter>", pause_e)
+pausebutton.bind("<Leave>", pause_l)
+Label(root, text="PAUSE", font=("comicsans", 9, BOLD)).place(x=426, y=407)
+
+
+root.mainloop()
